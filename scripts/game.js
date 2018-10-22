@@ -11,6 +11,9 @@ var game = new Phaser.Game(1024, 448, Phaser.AUTO, gameCanvas, {
 
   var boardSize = [1024, 1024]; // [x, y] dimensions in px;
 
+  var ground;
+  var player;
+
 // ********************************* Game status
 
 
@@ -42,14 +45,35 @@ function create() {
 	game.add.sprite(64, boardSize[1] - 256, 'arrows');
 	game.add.sprite(boardSize[0] - 128, boardSize[1] - 320, 'totem');
 
-
 	ground = game.add.sprite(0, boardSize[1] - 64, 'ground');
 	game.physics.arcade.enable(ground);
-	ground.body.immovable = true;
+  ground.body.immovable = true;
+  
+  createPlayer();
+	game.camera.follow(player);
 }
 
 // Elements update
 
 function update() {
+  var hitGround = game.physics.arcade.collide(player, ground);
+}
 
+
+// ********************************* Auxiliary functions
+
+
+function createPlayer() {
+	player = game.add.sprite(0, game.world.height - 200, 'player');
+
+	game.physics.arcade.enable(player);
+	player.body.collideWorldBounds = true;
+
+	player.body.gravity.y = 500;
+	player.body.bounce.y = 0.2;
+
+	player.animations.add('left', [0, 1, 2, 3, 4, 5], 6, true);
+	player.animations.add('right', [7, 8, 9, 10, 11, 12], 6, true);
+	player.animations.add('attack', [13, 14, 15, 16, 17, 18, 19], 12, true);
+	player.animations.add('die', [20, 21, 22, 23, 24, 25], 6, false);
 }
