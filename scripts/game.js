@@ -20,6 +20,7 @@ var gameOver = false;
 var cursor;
 var goldGroup;
 var enemy;
+var collectedGold;
 
 var level = [
 	['.', '$', '.', '$', '.', '.', '.', '.', '$', '.', '.', '.', '.', '$', '.', '.'],
@@ -101,6 +102,9 @@ function update() {
 	game.physics.arcade.collide(enemy, ground);
 	game.physics.arcade.collide(enemy, tiles);
 
+	game.physics.arcade.overlap(player, goldGroup, collectGold, null, this);
+	game.physics.arcade.overlap(player, enemy, killPlayer, null, this);
+
 	playerControl(hitGround, hitTiles);
 }
 
@@ -148,6 +152,38 @@ function playerControl(hitGround, hitTiles) {
 		if (cursor.up.isDown && player.body.touching.down && hitTiles) {
 			player.body.velocity.y = -520;
 		}
+	}
+}
+
+
+function killPlayer(playerSprite, orc) {
+	function killAnimation() {
+		player.animations.stop();
+		player.frame = 25;
+		orc.animations.stop();
+		orc.frame = 0;
+	}
+
+	if (playerIsAlive) {
+		playerIsAlive = false;
+		player.animations.play('die');
+		orc.animations.play('attack');
+
+		setTimeout(killAnimation, 800);
+
+		gameOver = true;
+		// createEndText();
+	}
+}
+
+
+function collectGold(playerSprite, gold) {
+	gold.kill();
+	collectedGold += 1;
+
+	if (collectedGold === 5) {
+		gameOver = true;
+		// createEndText();
 	}
 }
 
