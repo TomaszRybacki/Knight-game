@@ -7,6 +7,10 @@ var game = new Phaser.Game(1024, 448, Phaser.AUTO, gameCanvas, {
 });
 
 
+// ********************************* Global variables
+
+  var boardSize = [1024, 1024]; // [x, y] dimensions in px;
+
 // ********************************* Game status
 
 
@@ -31,7 +35,17 @@ function preload() {
 // Creating elements
 
 function create() {
+  game.physics.startSystem(Phaser.Physics.ARCADE);
+	game.add.sprite(0, 0, 'background');
+	game.world.setBounds(0, 0, boardSize[0], boardSize[1]);
 
+	game.add.sprite(64, boardSize[1] - 256, 'arrows');
+	game.add.sprite(boardSize[0] - 128, boardSize[1] - 320, 'totem');
+
+
+	ground = game.add.sprite(0, boardSize[1] - 64, 'ground');
+	game.physics.arcade.enable(ground);
+	ground.body.immovable = true;
 }
 
 // Elements update
