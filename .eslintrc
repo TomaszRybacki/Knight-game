@@ -1,0 +1,23 @@
+{
+    "extends": "airbnb-base",
+    "parserOptions": {
+    "ecmaVersion": 6
+    },
+    "env": {
+    "node": true,
+    "browser": true,
+    "es6": true
+    },
+    "rules": {
+    "comma-dangle": ["error", "never"],
+    "no-unused-vars": ["error", {"vars": "local", "args": "none"}],
+    "react/jsx-filename-extension": [0],
+    "no-use-before-define": [0],
+    "no-var": [0],
+    "no-undef": [0],
+    "prefer-template": [0],
+    "no-tabs": [0],
+    "indent": ["error", "tab"]
+    }
+
+}
