@@ -20,7 +20,7 @@ var gameOver = false;
 var cursor;
 var goldGroup;
 var enemy;
-var collectedGold;
+var collectedGold = 0;
 
 var level = [
 	['.', '$', '.', '$', '.', '.', '.', '.', '$', '.', '.', '.', '.', '$', '.', '.'],
@@ -156,6 +156,29 @@ function playerControl(hitGround, hitTiles) {
 }
 
 
+function createEndText() {
+	var text;
+	var style = {
+		font: 'bold 64px Arial',
+		boundsAlignH: 'center',
+		boundsAlignV: 'top'
+	};
+
+	if (playerIsAlive) {
+		style.fill = '#227700';
+		text = game.add.text(0, 0, '- VICTORY -', style);
+	} else {
+		style.fill = '#770000';
+		text = game.add.text(0, 0, '- GAME OVER -', style);
+	}
+
+	text.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
+
+	text.setTextBounds(0, 0, boardSize[0], boardSize[1] / 2);
+	text.fixedToCamera = true;
+}
+
+
 function killPlayer(playerSprite, orc) {
 	function killAnimation() {
 		player.animations.stop();
@@ -172,7 +195,7 @@ function killPlayer(playerSprite, orc) {
 		setTimeout(killAnimation, 800);
 
 		gameOver = true;
-		// createEndText();
+		createEndText();
 	}
 }
 
@@ -183,7 +206,7 @@ function collectGold(playerSprite, gold) {
 
 	if (collectedGold === 5) {
 		gameOver = true;
-		// createEndText();
+		createEndText();
 	}
 }
 
