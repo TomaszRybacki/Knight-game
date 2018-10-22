@@ -9,14 +9,34 @@ var game = new Phaser.Game(1024, 448, Phaser.AUTO, gameCanvas, {
 
 // ********************************* Global variables
 
-var boardSize = [1024, 1024]; // [x, y] dimensions in px;
+var boardSize = [1024, 1024]; // [width, height] dimensions in px;
+var gridSize = [64, 64];
 
 var ground;
-// var tiles;
+var tiles;
 var player;
 var playerIsAlive = true;
 var gameOver = false;
 var cursor;
+
+var level = [
+	['.', '$', '.', '$', '.', '.', '.', '.', '$', '.', '.', '.', '.', '$', '.', '.'],
+	['.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
+	['.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
+	['.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '!1', '.'],
+	['.', '.', '.', '.', '.', '.', '.', '1', '2', '3', '4', '.', '.', '.', '.', '.'],
+	['.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '$', '.', '.', '.', '.', '.'],
+	['1', '4', '.', '.', '.', '.', '.', '.', '.', '.', '.', '1', '2', '3', '2', '3'],
+	['.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
+	['.', '.', '.', '.', '.', '.', '1', '4', '.', '.', '.', '.', '.', '.', '.', '.'],
+	['.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
+	['.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
+	['1', '2', '3', '4', '.', '.', '.', '.', '.', '.', '1', '2', '3', '4', '.', '.'],
+	['.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '!2', '.', '.', '.', '.'],
+	['.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
+	['.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
+	['.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.']
+];
 
 // ********************************* Game status
 
@@ -56,15 +76,20 @@ function create() {
 	createPlayer();
 	game.camera.follow(player);
 	cursor = game.input.keyboard.createCursorKeys();
+
+	tiles = game.add.group();
+	tiles.enableBody = true;
+	createLevel();
+	game.physics.arcade.enable(tiles);
 }
 
 // Elements update
 
 function update() {
 	var hitGround = game.physics.arcade.collide(player, ground);
-	// var hitTiles = game.physics.arcade.collide(player, tiles);
+	var hitTiles = game.physics.arcade.collide(player, tiles);
 
-	playerControl(hitGround);
+	playerControl(hitGround, hitTiles);
 }
 
 
@@ -110,6 +135,45 @@ function playerControl(hitGround, hitTiles) {
 
 		if (cursor.up.isDown && player.body.touching.down && hitTiles) {
 			player.body.velocity.y = -520;
+		}
+	}
+}
+
+
+function createTile(i, j, name) {
+	var tile;
+
+	tile = tiles.create(gridSize[0] * j, gridSize[1] * i, name);
+	tile.body.immovable = true;
+	tiles.add(tile);
+}
+
+function createLevel() {
+	var i;
+	var j;
+
+	for (i = 0; i < level.length; i += 1) {
+		for (j = 0; j < level[i].length; j += 1) {
+			switch (level[i][j]) {
+			case '1': {
+				createTile(i, j, 'tile-1');
+				break;
+			}
+			case '2': {
+				createTile(i, j, 'tile-2');
+				break;
+			}
+			case '3': {
+				createTile(i, j, 'tile-3');
+				break;
+			}
+			case '4': {
+				createTile(i, j, 'tile-4');
+				break;
+			}
+			default:
+				// do nothing
+			}
 		}
 	}
 }
