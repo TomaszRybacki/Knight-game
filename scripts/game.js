@@ -19,12 +19,13 @@ var playerIsAlive = true;
 var gameOver = false;
 var cursor;
 var goldGroup;
+var enemy;
 
 var level = [
 	['.', '$', '.', '$', '.', '.', '.', '.', '$', '.', '.', '.', '.', '$', '.', '.'],
 	['.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
 	['.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
-	['.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '!1', '.'],
+	['.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
 	['.', '.', '.', '.', '.', '.', '.', '1', '2', '3', '4', '.', '.', '.', '.', '.'],
 	['.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '$', '.', '.', '.', '.', '.'],
 	['1', '4', '.', '.', '.', '.', '.', '.', '.', '.', '.', '1', '2', '3', '2', '3'],
@@ -33,11 +34,12 @@ var level = [
 	['.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
 	['.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
 	['1', '2', '3', '4', '.', '.', '.', '.', '.', '.', '1', '2', '3', '4', '.', '.'],
-	['.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '!2', '.', '.', '.', '.'],
+	['.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '!', '.', '.', '.', '.'],
 	['.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
 	['.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
 	['.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.']
 ];
+
 
 // ********************************* Game status
 
@@ -95,6 +97,9 @@ function update() {
 
 	game.physics.arcade.collide(goldGroup, ground);
 	game.physics.arcade.collide(goldGroup, tiles);
+
+	game.physics.arcade.collide(enemy, ground);
+	game.physics.arcade.collide(enemy, tiles);
 
 	playerControl(hitGround, hitTiles);
 }
@@ -173,6 +178,24 @@ function createGold(i, j, name) {
 }
 
 
+function createEnemy(i, j, name) {
+	enemy = game.add.sprite(64 * j, 64 * i, name);
+
+	game.physics.arcade.enable(enemy);
+	enemy.enableBody = true;
+	enemy.body.gravity.y = 500;
+	enemy.body.bounce.y = 0.2;
+	enemy.scale.setTo(1.2, 1.2);
+
+	enemy.animations.add('left', [21, 22, 23, 24, 25, 26, 27], 7, true);
+	enemy.animations.add('right', [7, 8, 9, 10, 11, 12, 13], 7, true);
+	enemy.animations.add('attack', [0, 1, 2, 3, 4, 5, 6], 12, true);
+	enemy.animations.add('die', [14, 15, 16, 17, 18, 19, 20], 7, false);
+
+	enemy.frame = 0;
+}
+
+
 function createLevel() {
 	var i;
 	var j;
@@ -182,6 +205,10 @@ function createLevel() {
 			switch (level[i][j]) {
 			case '$': {
 				createGold(i, j, 'gold');
+				break;
+			}
+			case '!': {
+				createEnemy(i, j, 'enemy');
 				break;
 			}
 			case '1': {
