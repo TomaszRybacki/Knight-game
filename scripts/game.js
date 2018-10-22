@@ -18,6 +18,7 @@ var player;
 var playerIsAlive = true;
 var gameOver = false;
 var cursor;
+var goldGroup;
 
 var level = [
 	['.', '$', '.', '$', '.', '.', '.', '.', '$', '.', '.', '.', '.', '$', '.', '.'],
@@ -77,6 +78,9 @@ function create() {
 	game.camera.follow(player);
 	cursor = game.input.keyboard.createCursorKeys();
 
+	goldGroup = game.add.group();
+	goldGroup.enableBody = true;
+
 	tiles = game.add.group();
 	tiles.enableBody = true;
 	createLevel();
@@ -88,6 +92,9 @@ function create() {
 function update() {
 	var hitGround = game.physics.arcade.collide(player, ground);
 	var hitTiles = game.physics.arcade.collide(player, tiles);
+
+	game.physics.arcade.collide(goldGroup, ground);
+	game.physics.arcade.collide(goldGroup, tiles);
 
 	playerControl(hitGround, hitTiles);
 }
@@ -148,6 +155,24 @@ function createTile(i, j, name) {
 	tiles.add(tile);
 }
 
+
+function createGold(i, j, name) {
+	var gold;
+
+	gold = goldGroup.create(gridSize[0] * j, gridSize[1] * i, name);
+	gold.scale.setTo(0.7, 0.7);
+
+	gold.enableBody = true;
+	gold.body.gravity.y = 200;
+	gold.body.bounce.y = 0.4 + (Math.random() * 0.2);
+
+	gold.animations.add('rotate', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 10, true);
+	gold.animations.play('rotate');
+
+	goldGroup.add(gold);
+}
+
+
 function createLevel() {
 	var i;
 	var j;
@@ -155,6 +180,10 @@ function createLevel() {
 	for (i = 0; i < level.length; i += 1) {
 		for (j = 0; j < level[i].length; j += 1) {
 			switch (level[i][j]) {
+			case '$': {
+				createGold(i, j, 'gold');
+				break;
+			}
 			case '1': {
 				createTile(i, j, 'tile-1');
 				break;
