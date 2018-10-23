@@ -70,10 +70,10 @@ function create() {
 	game.add.sprite(0, 0, 'background');
 	game.world.setBounds(0, 0, boardSize[0], boardSize[1]);
 
-	game.add.sprite(64, boardSize[1] - 256, 'arrows');
-	game.add.sprite(boardSize[0] - 128, boardSize[1] - 320, 'totem');
+	game.add.sprite(gridSize[0], boardSize[1] - (4 * gridSize[1]), 'arrows');
+	game.add.sprite(boardSize[0] - (2 * gridSize[0]), boardSize[1] - (5 * gridSize[0]), 'totem');
 
-	ground = game.add.sprite(0, boardSize[1] - 64, 'ground');
+	ground = game.add.sprite(0, boardSize[1] - gridSize[1], 'ground');
 	game.physics.arcade.enable(ground);
 	ground.body.immovable = true;
 
@@ -201,8 +201,12 @@ function killPlayer(playerSprite, orc) {
 
 
 function collectGold(playerSprite, gold) {
+	var point;
+
 	gold.kill();
 	collectedGold += 1;
+	point = document.getElementById('gold' + collectedGold);
+	point.src = 'assets/point.png';
 
 	if (collectedGold === 5) {
 		gameOver = true;

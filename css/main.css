@@ -8,6 +8,7 @@ body {
   height: 100vh;
 
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
@@ -15,4 +16,21 @@ body {
 #game-canvas {
   height: 448px;
   width: 1024px;
+}
+
+.UI {
+  width: 1024px;
+  height: 128px;
+  margin: 6px 0;
+  background-image: url('../assets/UI.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+img {
+  padding-top: 40px;
 }
