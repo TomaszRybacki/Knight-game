@@ -61,11 +61,15 @@ function preload() {
 	game.load.spritesheet('enemy', 'assets/enemy.png', 128, 128);
 	game.load.spritesheet('player', 'assets/knight.png', 128, 128);
 	game.load.spritesheet('gold', 'assets/gold.png', 64, 64);
+
+	game.load.audio('soundtrack', 'sounds/soundtrack.ogg');
 }
 
 // Creating elements
 
 function create() {
+	var music;
+
 	game.physics.startSystem(Phaser.Physics.ARCADE);
 	game.add.sprite(0, 0, 'background');
 	game.world.setBounds(0, 0, boardSize[0], boardSize[1]);
@@ -88,6 +92,11 @@ function create() {
 	tiles.enableBody = true;
 	createLevel();
 	game.physics.arcade.enable(tiles);
+
+	music = game.add.audio('soundtrack');
+	music.volume = 0.5;
+	music.loop = true;
+	music.play();
 }
 
 // Elements update
